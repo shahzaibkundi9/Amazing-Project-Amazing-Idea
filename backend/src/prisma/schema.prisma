@@ -26,3 +26,16 @@ model Order {
   metadata   Json?    // AI ya WhatsApp automation data
   createdAt  DateTime @default(now())
 }
+model Payment {
+  id          String   @id @default(cuid())
+  userId      String
+  orderId     String
+  method      String   // easypaisa, jazzcash, bank
+  amount      Int
+  screenshot  String?  // Cloudinary URL
+  status      String   @default("pending") // pending → awaiting → paid → rejected
+  createdAt   DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
+}

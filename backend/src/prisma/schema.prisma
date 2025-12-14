@@ -39,3 +39,17 @@ model Payment {
   user  User  @relation(fields: [userId], references: [id])
   order Order @relation(fields: [orderId], references: [id])
 }
+
+
+model Chat {
+  id         String   @id @default(cuid())
+  userId     String
+  orderId    String?
+  message    String?
+  type       String   // text, image, payment_notice
+  sender     String   // user, bot, admin, whatsapp
+  createdAt  DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
+}

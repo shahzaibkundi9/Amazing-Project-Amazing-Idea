@@ -3,9 +3,13 @@
 import { app } from "./app";
 import { env } from "./config";
 import { logger } from "./utils/logger";
+import { initSocket } from "./sockets";
 
 const PORT = env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   logger.info(`🚀 Server chal raha hai on port ${PORT}`);
 });
+
+// Roman Urdu: Socket.io enable karna
+initSocket(server);

@@ -5,6 +5,7 @@ import authRoutes from "./modules/auth/auth.route";
 import userRoutes from "./modules/users/user.route";
 import orderRoutes from "./modules/orders/order.route";
 import paymentRoutes from "./modules/payments/payment.route";
+import chatRoutes from "./modules/chats/chat.route";
 
 const router = Router();
 
@@ -12,6 +13,7 @@ router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/orders", orderRoutes);
 router.use("/payments", paymentRoutes);
+router.use("/chats", chatRoutes);
 
 router.get("/", (req, res) => {
   res.send("Backend API Running ✔");

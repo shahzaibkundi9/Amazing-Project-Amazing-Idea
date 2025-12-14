@@ -5,11 +5,12 @@ import { humanTyping } from "../utils/humanizer";
 import { handleAIFlow } from "../flows/ai.flow";
 import { handlePaymentFlow } from "../flows/payment.flow";
 import { handleMediaMessage } from "./media.handler";
+import { processOrderAwareMessage } from "../flows/order.flow";
 
 export const handleIncomingMessage = async (sock: any, msg: any) => {
   const sender = msg.key.remoteJid;
 
-  // MEDIA HANDLING
+  // IMAGE / SCREENSHOT detection
   if (msg.message.imageMessage) {
     return await handleMediaMessage(sock, msg);
   }
@@ -21,11 +22,6 @@ export const handleIncomingMessage = async (sock: any, msg: any) => {
 
   await humanTyping(sock, sender);
 
-  // Payment trigger
-  if (text.includes("screenshot") || text.includes("paid")) {
-    return await handlePaymentFlow(sock, sender);
-  }
-
-  // AI conversation default flow  
-  return handleAIFlow(sock, sender, text);
+  // Smart brain message router
+  return processOrderAwareMessage(sock, sender, text);
 };

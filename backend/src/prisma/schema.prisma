@@ -8,10 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model User {
   id        String   @id @default(cuid())
   name      String?
   email     String   @unique
   password  String
+  orders    Order[]
   createdAt DateTime @default(now())
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  status     String   @default("pending") // pending → awaiting_advance → confirmed
+  metadata   Json?    // AI ya WhatsApp automation data
+  createdAt  DateTime @default(now())
 }

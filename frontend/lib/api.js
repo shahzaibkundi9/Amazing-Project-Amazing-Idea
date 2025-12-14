@@ -2,14 +2,17 @@
 export const api = {
   get: async (url: string) => {
     const token = localStorage.getItem("token");
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}${url}`, {
       headers: { Authorization: token ? `Bearer ${token}` : "" },
     });
+
     return res.json();
   },
 
   post: async (url: string, data: any) => {
     const token = localStorage.getItem("token");
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}${url}`, {
       method: "POST",
       headers: {
@@ -18,11 +21,13 @@ export const api = {
       },
       body: JSON.stringify(data),
     });
+
     return res.json();
   },
 
   put: async (url: string, data: any) => {
     const token = localStorage.getItem("token");
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}${url}`, {
       method: "PUT",
       headers: {
@@ -31,7 +36,7 @@ export const api = {
       },
       body: JSON.stringify(data),
     });
+
     return res.json();
   },
 };
-

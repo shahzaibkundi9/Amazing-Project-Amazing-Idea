@@ -1,27 +1,28 @@
 // Roman Urdu Comment: Incoming WhatsApp messages ko process karta hai
 
-import axios from "axios";
-import { humanTyping } from "../utils/humanizer";
-import { handleAIFlow } from "../flows/ai.flow";
-import { handlePaymentFlow } from "../flows/payment.flow";
-import { handleMediaMessage } from "./media.handler";
+
+import { syncMessage } from "../sync/sync.events";
 import { processOrderAwareMessage } from "../flows/order.flow";
+import { humanTyping } from "../utils/humanizer";
+import { handleMediaMessage } from "./media.handler";
 
 export const handleIncomingMessage = async (sock: any, msg: any) => {
   const sender = msg.key.remoteJid;
 
-  // IMAGE / SCREENSHOT detection
+  // Media detection
   if (msg.message.imageMessage) {
+    await syncMessage(sender, "[Media Received]", "image", "user");
     return await handleMediaMessage(sock, msg);
   }
 
-  const text = msg.message.conversation || 
-               msg.message.extendedTextMessage?.text;
-
+  const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
   if (!text) return;
+
+  // Sync incoming msg to backend + admin
+  await syncMessage(sender, text, "text", "user");
 
   await humanTyping(sock, sender);
 
-  // Smart brain message router
+  // Smart AI/Payment decision engine
   return processOrderAwareMessage(sock, sender, text);
 };

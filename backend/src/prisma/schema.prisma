@@ -71,3 +71,9 @@ model Template {
   content   String
   createdAt DateTime @default(now())
 }
+
+model Heartbeat {
+  id        String   @id @default(cuid())
+  service   String
+  createdAt DateTime @default(now())
+}

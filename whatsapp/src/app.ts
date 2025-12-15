@@ -1,17 +1,14 @@
 // Roman Urdu Comment: WhatsApp service ka main entrypoint
 
 import { initClient } from "./client";
-import { loadSession } from "./session/session.loader";
-import { logger } from "./utils/humanizer";
+import crypto from "crypto";
 
-async function bootstrap() {
-  logger("🚀 WhatsApp Service Booting...");
+const ENC_KEY = process.env.SESSION_KEY || crypto.randomBytes(32).toString("hex");
 
-  const session = await loadSession();
+// Roman Urdu: Future — session encryption ke liye key ready
+process.env.INTERNAL_SESSION_KEY = ENC_KEY;
 
-  await initClient(session);
-
-  logger("🔥 WhatsApp Client Ready!");
-}
-
-bootstrap();
+(async () => {
+  console.log("🚀 WhatsApp Secure Service Booting…");
+  await initClient("./sessions");
+})();

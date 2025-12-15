@@ -1,4 +1,5 @@
 // Roman Urdu: Backend se secure API calls
+
 export const api = {
   get: async (url: string) => {
     const token = localStorage.getItem("token");
@@ -35,6 +36,19 @@ export const api = {
         Authorization: token ? `Bearer ${token}` : "",
       },
       body: JSON.stringify(data),
+    });
+
+    return res.json();
+  },
+
+  delete: async (url: string) => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}${url}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
     });
 
     return res.json();

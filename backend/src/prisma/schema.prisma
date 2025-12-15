@@ -53,3 +53,13 @@ model Chat {
   user  User  @relation(fields: [userId], references: [id])
   order Order @relation(fields: [orderId], references: [id])
 }
+
+
+model AIProvider {
+  id        String   @id @default(cuid())
+  name      String
+  apiKey    String?
+  enabled   Boolean  @default(false)
+  priority  Int      @default(1)
+  createdAt DateTime @default(now())
+}

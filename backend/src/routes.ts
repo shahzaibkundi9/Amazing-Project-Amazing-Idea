@@ -12,6 +12,7 @@ import contextRoutes from "./modules/context/context.route";
 import aiProviderRoutes from "./modules/ai-providers/aiProvider.route";
 import templateRoutes from "./modules/templates/template.route";
 import analyticsRoutes from "./modules/analytics/analytics.route";
+import uploadRoutes from "./modules/uploads/upload.route";
 
 const router = Router();
 
@@ -25,6 +26,7 @@ router.use("/context", contextRoutes);
 router.use("/ai/providers", aiProviderRoutes);
 router.use("/templates", templateRoutes);
 router.use("/analytics", analyticsRoutes);
+router.use("/uploads", uploadRoutes);
 
 router.get("/", (req, res) => {
   res.send("Backend API Running ✔");

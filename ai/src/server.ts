@@ -2,6 +2,7 @@
 
 import express from "express";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 import { AISelector } from "./rotation/selector";
 import { logger } from "./utils/logger";
 import { SafetyFilter } from "./safety/safety.filter";
@@ -14,43 +15,48 @@ export const startServer = () => {
   app.use(cors());
   app.use(express.json({ limit: "10mb" }));
 
+  // Roman Urdu: AI abuse protection
+  app.use(
+    rateLimit({
+      windowMs: 60 * 1000,
+      max: 60,
+    })
+  );
+
   app.post("/api/ai/ask", async (req, res) => {
     try {
-      const { userId, message, history = [], metadata = {} } = req.body;
+      const { userId, message } = req.body;
 
-      // 1️⃣ Detect language
+      if (!message || message.length > 500)
+        return res.json({ success: false, message: "Invalid message" });
+
       const lang = detectLanguage(message);
 
-      // 2️⃣ Load conversation context
       const context = ContextManager.load(userId);
 
-      // 3️⃣ Select AI provider dynamically
       const provider = await AISelector.getProvider();
 
-      // 4️⃣ Generate response
       const reply = await provider.generate({
         message,
-        history,
+        history: req.body.history,
         context,
         lang,
-        metadata,
+        metadata: req.body.metadata,
       });
 
-      // 5️⃣ Safety filter
-      const safeReply = SafetyFilter.clean(reply);
+      const safe = SafetyFilter.clean(reply);
 
-      // 6️⃣ Update context memory
-      ContextManager.update(userId, message, safeReply);
+      ContextManager.update(userId, message, safe);
 
+      return res.json({ success: true, data: { message: safe } });
+    } catch (err) {
+      logger("AI Error: " + err);
       return res.json({
-        success: true,
-        data: { message: safeReply },
+        success: false,
+        message: "AI processing failure. Try again.",
       });
-    } catch (err: any) {
-      logger("❌ AI ERROR: " + err.message);
-      return res.status(500).json({ success: false, message: "AI Service Error" });
     }
   });
 
-  app.listen(7000, () => logger("🚀 AI Service Running on Port 7000"));
+  app.listen(7000, () => logger("🔥 AI Service Live & Secured"));
 };

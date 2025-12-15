@@ -1,0 +1,24 @@
+{
+  "name": "amazing-whatsapp-ai",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "ai",
+    "whatsapp"
+  ],
+  "scripts": {
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:ai": "pnpm --filter ai dev",
+    "dev:whatsapp": "pnpm --filter whatsapp dev",
+    "dev:all": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "clean": "rimraf node_modules **/node_modules"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "rimraf": "latest"
+  }
+}

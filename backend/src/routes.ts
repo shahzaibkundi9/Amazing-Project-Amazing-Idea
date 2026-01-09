@@ -28,6 +28,10 @@ router.use("/templates", templateRoutes);
 router.use("/analytics", analyticsRoutes);
 router.use("/uploads", uploadRoutes);
 
+router.get("/health", (req, res) => {
+  res.json({ status: "ok", timestamp: Date.now() });
+});
+
 router.get("/", (req, res) => {
   res.send("Backend API Running ✔");
 });

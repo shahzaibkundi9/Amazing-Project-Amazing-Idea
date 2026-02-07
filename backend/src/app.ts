@@ -8,6 +8,9 @@ import rateLimit from "express-rate-limit";
 import mongoSanitize from "express-mongo-sanitize";
 import xssClean from "xss-clean";
 import hpp from "hpp";
+import { swaggerDocs } from "./docs/swagger";
+
+swaggerDocs(app);
 
 import routes from "./routes";
 
